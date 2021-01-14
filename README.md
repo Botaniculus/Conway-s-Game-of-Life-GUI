@@ -1,5 +1,7 @@
 # My version of Conway's Game of Life
 
+![Game](screenshot.png)
+
 ## Key shortcuts
 `Space` pause and resume the game;  
 `Backspace` clear and pause the game;  
