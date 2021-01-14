@@ -2,37 +2,30 @@ package com.matejprerovsky.gameoflifegui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Panel extends JPanel implements ActionListener, Runnable{
+public class Panel extends JPanel implements ActionListener{
 	private final int DELAY = 150;
-	private final int SCREEN_SIDE = 600;
-	private final int SCREEN_SIZE = SCREEN_SIDE*SCREEN_SIDE;
-	private final int UNIT_SIDE = 25;
-	private final int UNIT_SIZE = UNIT_SIDE*UNIT_SIDE;
-	private final int GAME_UNITS=SCREEN_SIZE/UNIT_SIZE;
+	private final int SCREEN_SIDE = 800;
+	private final int UNIT_SIDE = 20;
 	private final Game game;
 	private Timer timer; 
-	private Timer timerForDrawing; 
 	private boolean paused = false;
+	private int generation=0;
 	
 	public void pauseGame() {
-		if(paused) {
-			paused=false;
-		} else {
-			paused=true;
-		}
+		paused = (paused) ? false : true;
 	}
 	public Panel() {
 		game = new Game(SCREEN_SIDE, UNIT_SIDE);
@@ -43,20 +36,34 @@ public class Panel extends JPanel implements ActionListener, Runnable{
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int code = e.getKeyCode();
-				if(code == KeyEvent.VK_SPACE)
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_SPACE:
 					pauseGame();
-				else if(code == KeyEvent.VK_MINUS) {
+					break;
+
+				case KeyEvent.VK_MINUS:
 					timer.setDelay(timer.getDelay()+10);
 					System.out.println("Delay "+timer.getDelay());
-				}
-				else if(code == KeyEvent.VK_PLUS) {
+					break;
+					
+				case KeyEvent.VK_PLUS:
 					timer.setDelay(timer.getDelay()-10);
 					System.out.println("Delay "+timer.getDelay());
-				} else if(code == KeyEvent.VK_BACK_SPACE) {
+					break;
+				
+				case KeyEvent.VK_BACK_SPACE:
 					game.clearCanvas();
-					
+					generation=0;
+					if(!paused)
+						pauseGame();
+					break;
+				
+				case KeyEvent.VK_R:
+					generation=0;
+					game.randomizeCanvas();
+					break;
 				}
+				
 			}
 		});
 		this.addMouseListener(new MouseAdapter() {
@@ -65,7 +72,6 @@ public class Panel extends JPanel implements ActionListener, Runnable{
 				int x=(e.getX()/UNIT_SIDE);
 			    int y=(e.getY()/UNIT_SIDE);
 			    game.addCell(x, y);
-			    
 		    }
 		});
 		timer = new Timer(DELAY, this);
@@ -89,26 +95,26 @@ public class Panel extends JPanel implements ActionListener, Runnable{
 				if(grid[i][j] == 0) continue;
 				else {
 					g.setColor(Color.MAGENTA);
-					g.fillRoundRect((j)*UNIT_SIDE, (i)*UNIT_SIDE, UNIT_SIDE, UNIT_SIDE, 15, 15);
+					//g.fillRoundRect((j)*UNIT_SIDE, (i)*UNIT_SIDE, UNIT_SIDE, UNIT_SIDE, 15, 15);
+					g.fillOval((j)*UNIT_SIDE, (i)*UNIT_SIDE, UNIT_SIDE, UNIT_SIDE);
 					g.drawRect((j)*UNIT_SIDE, (i)*UNIT_SIDE, UNIT_SIDE, UNIT_SIDE);
 				}
 			}
 		}
+		g.setColor(Color.white);
+		g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 25));
+		FontMetrics metrics = getFontMetrics(g.getFont());
+		
+		g.drawString("[ Generations: " + generation + " ]", (SCREEN_SIDE - metrics.stringWidth("[ Generations: " + generation + " ]"))/2, g.getFont().getSize());
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(!paused) {
-			Thread thread = new Thread(this);
-			thread.start();
-			while(thread.isAlive()) {}
+			game.nextGeneration();
+			generation++;
 		}
-		
 		repaint();
-		
 	}
-	public void run() {
-		game.nextGeneration();
-		
-	}
+	
 
 }
