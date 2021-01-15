@@ -7,3 +7,5 @@
 `Backspace` clear and pause the game;  
 `r`(`R`) generate random patterns;  
 `+`/`-` speed up or slow down the game;  
+
+**TODO: add infinite grid**
