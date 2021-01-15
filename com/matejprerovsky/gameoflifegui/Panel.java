@@ -17,7 +17,7 @@ import javax.swing.Timer;
 
 public class Panel extends JPanel implements ActionListener{
 	private final int DELAY = 150;
-	private final int SCREEN_SIDE = 800;
+	private final int SCREEN_SIDE = 600;
 	private final int UNIT_SIDE = 20;
 	private final Game game;
 	private Timer timer; 

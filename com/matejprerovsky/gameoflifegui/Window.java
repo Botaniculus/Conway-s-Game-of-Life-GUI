@@ -1,5 +1,8 @@
 package com.matejprerovsky.gameoflifegui;
 
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Window extends JFrame{
@@ -11,6 +14,7 @@ public class Window extends JFrame{
 		this.setResizable(false);
 		this.pack();
 		this.setLocationRelativeTo(null);
+		this.setIconImage(new ImageIcon(getClass().getResource("icon.png")).getImage());
 		this.setVisible(true);
 	}
 	

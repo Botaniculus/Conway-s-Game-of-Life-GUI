@@ -46,11 +46,10 @@ public class Game{
 		private int neighborsCount(int x, int y) {
 			int count = 0;
 			for(int i=y-1; i<=y+1; i++) {
-				for(int j=x-1; j<=x+1; j++) {
+				for(int j=x-1; j<=x+1; j++) {				
 					if(i==y && j==x) continue;
-					try {
-						count+=(canvas[i][j] == LIVE_CELL) ? 1 : 0;
-					} catch (ArrayIndexOutOfBoundsException e) {}
+					count+=(canvas[(i==-1 || i==SIDE)?((i==-1)?(i+SIDE):0):i][(j==-1 || j==SIDE)?((j==-1)?(j+SIDE):0):j] == LIVE_CELL) ? 1 : 0;
+					
 				}
 			}
 			return count;
@@ -58,6 +57,7 @@ public class Game{
 		
 		public int[][] nextGeneration() {
 			int[][] copy = new int[SIDE][SIDE];
+			String outString="";
 	 		for(int i=0; i<SIDE; i++) {
 				for(int j=0; j<SIDE; j++) {
 					int neighbors = neighborsCount(j, i);
@@ -66,9 +66,14 @@ public class Game{
 					} else{
 						copy[i][j] = ((neighbors<2) || (neighbors>3)) ? DEAD_CELL : LIVE_CELL;
 					}
+					outString+=(neighbors>0)?neighbors:" ";
 				}
+				
+					outString+="\n";
+				
 			}
 
+	 		System.out.println(outString);
 	 		canvas=copy.clone();
 	 		return canvas;
 		}
