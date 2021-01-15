@@ -4,7 +4,6 @@ import java.util.Random;
 
 public class Game{
 		private final int SIDE;
-		private boolean stopped=false;
 		private final int LIVE_CELL = 1;
 		private final int DEAD_CELL = 0;
 		
@@ -66,14 +65,8 @@ public class Game{
 					} else{
 						copy[i][j] = ((neighbors<2) || (neighbors>3)) ? DEAD_CELL : LIVE_CELL;
 					}
-					outString+=(neighbors>0)?neighbors:" ";
-				}
-				
-					outString+="\n";
-				
+				}	
 			}
-
-	 		System.out.println(outString);
 	 		canvas=copy.clone();
 	 		return canvas;
 		}
